@@ -1,0 +1,77 @@
+title: Article
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: summary
+            field:
+              character_limit: 200
+              type: textarea
+              display: Summary
+              instructions: 'Kort oppsummering av innholdet (1–2 setninger)'
+              validate:
+                - required
+          -
+            handle: topics
+            field:
+              max_items: 3
+              mode: select
+              taxonomies:
+                - topics
+              type: terms
+              display: Topics
+              validate:
+                - required
+          -
+            handle: tags
+            field:
+              taxonomies:
+                - tags
+              type: terms
+              display: Tags
+              instructions: 'Valgfrie stikkord'
+          -
+            handle: content
+            field:
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - removeformat
+                - quote
+                - anchor
+                - image
+                - table
+                - h1
+                - underline
+                - strikethrough
+                - superscript
+                - subscript
+                - codeblock
+              remove_empty_nodes: false
+              type: bard
+              display: Content
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'

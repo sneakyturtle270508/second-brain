@@ -1,0 +1,14 @@
+{{ content }}
+<p>DEBUG KNOWLEDGE TEMPLATE LOADED</p>
+
+<h1>{{ title }}</h1>
+
+<section class="knowledge-list">
+  <h2>Artikler</h2>
+
+  {{ collection:articles }}
+    <article>
+      <h3><a href="{{ url }}">{{ title }}</a></h3>
+    </article>
+  {{ /collection:articles }}
+</section>
