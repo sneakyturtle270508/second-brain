@@ -274,25 +274,25 @@ body {
 .notes-panel__list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
+  border-top: 1px solid #e5e7eb;
 }
 
 .note-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 6px;
+  border-bottom: 1px solid #e5e7eb;
   text-decoration: none;
   color: inherit;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-  background: #fafafa;
+  transition: background 150ms ease;
+  background: transparent;
 }
 
 .note-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  background: #f9fafb;
 }
 
 .note-card__title {
@@ -300,10 +300,17 @@ body {
   font-weight: 600;
 }
 
+.note-card__meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
 .note-card__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  justify-self: end;
 }
 
 .tag {
@@ -325,6 +332,19 @@ body {
 
   .ai-chat__context {
     align-self: flex-start;
+  }
+
+  .note-card {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+
+  .note-card__meta {
+    order: 2;
+  }
+
+  .note-card__tags {
+    justify-self: start;
   }
 }
 
