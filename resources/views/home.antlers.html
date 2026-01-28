@@ -99,7 +99,9 @@
           data-updated-at="{{ updated_at }}"
         >
           <div class="note-card__title">{{ title }}</div>
-          <div class="note-card__meta">Oppdatert {{ updated_at format="d.m.Y" }}</div>
+          <time class="note-card__meta" datetime="{{ updated_at format='Y-m-d' }}">
+            Oppdatert {{ updated_at format="d.m.Y" }}
+          </time>
           {{ if tags }}
             <div class="note-card__tags">
               {{ tags }}
