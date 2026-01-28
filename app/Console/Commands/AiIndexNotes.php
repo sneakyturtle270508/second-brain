@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\AiService;
 use App\Models\AiDocument;
+use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\Entry;
 
 class AiIndexNotes extends Command
@@ -77,12 +78,21 @@ class AiIndexNotes extends Command
             $doc->collection = $collection;
             $doc->slug = $slug;
             $doc->title = $title;
-            $doc->tags = $tags;
             $doc->content = $content;
             $doc->content_hash = $hash;
             $doc->embedding = $embedding; // cast til array i modellen gjør dette til JSON i DB
-            $doc->url = $url;
-            $doc->permalink = $permalink;
+
+            if (Schema::hasColumn('ai_documents', 'tags')) {
+                $doc->tags = $tags;
+            }
+
+            if (Schema::hasColumn('ai_documents', 'url')) {
+                $doc->url = $url;
+            }
+
+            if (Schema::hasColumn('ai_documents', 'permalink')) {
+                $doc->permalink = $permalink;
+            }
             $doc->save();
         }
 

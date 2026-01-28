@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\AiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Statamic\Facades\Entry;
 use Statamic\Fields\Value;
 
@@ -57,24 +58,35 @@ class AiIndexEntries extends Command
             $url = $entry->url() ?: null;
             $permalink = $url ? rtrim(config('app.url'), '/').$url : null;
 
+            $payload = [
+                'collection' => $entry->collectionHandle(),
+                'slug' => $slug,
+                'title' => $title,
+                'content' => $text,
+                'content_hash' => $hash,
+                'embedding' => json_encode($embedding),
+                'updated_at' => now(),
+                'created_at' => now(),
+            ];
+
+            if (Schema::hasColumn('ai_documents', 'tags')) {
+                $payload['tags'] = $tags ? json_encode($tags) : null;
+            }
+
+            if (Schema::hasColumn('ai_documents', 'url')) {
+                $payload['url'] = $url;
+            }
+
+            if (Schema::hasColumn('ai_documents', 'permalink')) {
+                $payload['permalink'] = $permalink;
+            }
+
             DB::table('ai_documents')->updateOrInsert(
                 [
                     'source' => $sourceType,
                     'source_id' => $sourceId,
                 ],
-                [
-                    'collection' => $entry->collectionHandle(),
-                    'slug' => $slug,
-                    'title' => $title,
-                    'tags' => $tags ? json_encode($tags) : null,
-                    'content' => $text,
-                    'content_hash' => $hash,
-                    'embedding' => json_encode($embedding),
-                    'url' => $url,
-                    'permalink' => $permalink,
-                    'updated_at' => now(),
-                    'created_at' => now(),
-                ]
+                $payload
             );
 
             $this->line("✓ Indexed {$title} ({$sourceId})");
