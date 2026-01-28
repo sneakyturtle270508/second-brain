@@ -84,6 +84,7 @@ function initAiChat(root) {
         k: 5,
         tag: tagInput?.value || null,
         collection: collectionInput?.value || null,
+        include_recent: includeRecentInput?.value === "1",
       };
 
       const res = await fetch("/ai/ask", {
@@ -115,6 +116,9 @@ function initAiChat(root) {
       isSending = false;
       input.disabled = false;
       input.focus();
+      if (includeRecentInput) {
+        includeRecentInput.value = "0";
+      }
     }
   }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\AiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Statamic\Facades\Entry;
 
 class AiController extends Controller
 {
@@ -54,9 +56,16 @@ class AiController extends Controller
     {
         $q = (string) $request->input('q', '');
         $k = (int) $request->input('k', 5);
+        $collection = $request->input('collection');
+        $includeRecent = $request->boolean('include_recent');
 
         if (trim($q) === '') {
             return response()->json(['ok' => false, 'error' => 'Missing q'], 422);
+        }
+
+        if (!$includeRecent) {
+            $normalized = Str::lower($q);
+            $includeRecent = str_contains($normalized, 'uken') || str_contains($normalized, 'uke');
         }
 
         // Rebruk search-logikken for å hente topp-kontekst
@@ -86,10 +95,22 @@ class AiController extends Controller
             $context .= $this->clip($d['content'], 1600) . "\n\n";
         }
 
+        $recentNotes = [];
+        if ($includeRecent) {
+            $recentNotes = $this->recentNotes($collection);
+            if ($recentNotes !== []) {
+                $context .= "OPPDATERTE NOTATER DENNE UKEN:\n";
+                foreach ($recentNotes as $note) {
+                    $context .= "- {$note['title']} (oppdatert {$note['updated_at']})\n";
+                }
+                $context .= "\n";
+            }
+        }
+
         $messages = [
             [
                 'role' => 'system',
-                'content' => "Du er en second-brain assistent. Svar kort, presist, og baser deg på kildene. Hvis kildene ikke dekker spørsmålet, si det og foreslå hva som mangler. Referer til kilder som (SOURCE 1), (SOURCE 2) osv."
+                'content' => "Du er en second-brain assistent. Svar kort, presist, og baser deg på kildene. Hvis kildene ikke dekker spørsmålet, si det og foreslå hva som mangler. Referer til kilder som (SOURCE 1), (SOURCE 2) osv. Hvis listen over oppdaterte notater finnes, oppgi den eksplisitt når brukeren ber om ukesoppsummering."
             ],
             [
                 'role' => 'user',
@@ -139,5 +160,39 @@ class AiController extends Controller
     {
         $text = trim($text);
         return mb_strlen($text) > $max ? (mb_substr($text, 0, $max) . "…") : $text;
+    }
+
+    private function recentNotes(?string $collection, int $days = 7): array
+    {
+        $since = now()->subDays($days)->timestamp;
+        $query = Entry::query();
+
+        if (is_string($collection) && $collection !== '') {
+            $query->where('collection', $collection);
+        }
+
+        $notes = [];
+
+        foreach ($query->get() as $entry) {
+            $updatedAt = $entry->get('updated_at');
+            $timestamp = is_numeric($updatedAt) ? (int) $updatedAt : (int) $entry->lastModified()->timestamp;
+
+            if ($timestamp < $since) {
+                continue;
+            }
+
+            $notes[] = [
+                'title' => (string) ($entry->get('title') ?? $entry->slug()),
+                'updated_at' => date('d.m.Y', $timestamp),
+                'timestamp' => $timestamp,
+            ];
+        }
+
+        usort($notes, fn ($a, $b) => $b['timestamp'] <=> $a['timestamp']);
+
+        return array_map(fn ($note) => [
+            'title' => $note['title'],
+            'updated_at' => $note['updated_at'],
+        ], $notes);
     }
 }
