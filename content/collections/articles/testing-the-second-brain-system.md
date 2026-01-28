@@ -8,7 +8,7 @@ topics:
 tags:
   - test
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1768997390
+updated_at: 1769607578
 content:
   -
     type: paragraph
@@ -18,6 +18,18 @@ content:
         text: 'this just test'
   -
     type: paragraph
+    content:
+      -
+        type: text
+        text: 'kul kode'
+  -
+    type: paragraph
+  -
+    type: paragraph
+    content:
+      -
+        type: text
+        text: 'man trenger kun 1 h1 på en side'
   -
     type: codeBlock
     attrs:
