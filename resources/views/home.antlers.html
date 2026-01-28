@@ -63,6 +63,9 @@
       <input type="hidden" name="collection" value="articles">
       <input type="hidden" name="include_recent" value="0" data-include-recent-input>
       <div class="ai-chat__input-wrapper ai-chat__input-wrapper--chatgpt">
+        <button class="ai-chat__icon ai-chat__icon--add" type="button" aria-label="Legg til">
+          +
+        </button>
         <input
           class="ai-chat__input"
           name="message"
@@ -70,7 +73,14 @@
           autocomplete="off"
           required
         >
-        <button class="ai-chat__send" type="submit">Send</button>
+        <div class="ai-chat__actions">
+          <button class="ai-chat__icon ai-chat__icon--mic" type="button" aria-label="Bruk stemme">
+            🎙️
+          </button>
+          <button class="ai-chat__icon ai-chat__icon--send" type="submit" aria-label="Send">
+            ➜
+          </button>
+        </div>
       </div>
       <p class="ai-chat__footnote">Enter for å sende · Shift + Enter for ny linje</p>
     </form>
