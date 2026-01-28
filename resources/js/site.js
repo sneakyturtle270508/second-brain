@@ -8,6 +8,7 @@ function initAiChat(root) {
   const input = form?.querySelector('input[name="message"]');
   const tagInput = form?.querySelector('input[name="tag"]');
   const collectionInput = form?.querySelector('input[name="collection"]');
+  const includeRecentInput = form?.querySelector("[data-include-recent-input]");
   const suggestions = root.querySelector("[data-ai-suggestions]");
 
   if (!form || !messages || !input) return;
@@ -138,12 +139,25 @@ function initAiChat(root) {
   suggestions?.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
-    if (!target.classList.contains("ai-suggestion")) return;
 
-    const suggestionText = target.textContent?.trim();
+    const suggestionEl = target.closest("[data-suggestion]");
+    if (!(suggestionEl instanceof HTMLElement)) return;
+
+    const suggestionText = suggestionEl.dataset.suggestion?.trim();
     if (!suggestionText) return;
 
     input.value = suggestionText;
+
+    if (includeRecentInput) {
+      const includeRecent = suggestionEl.dataset.includeRecent === "1";
+      includeRecentInput.value = includeRecent ? "1" : "0";
+
+      if (includeRecent) {
+        form.requestSubmit();
+        return;
+      }
+    }
+
     input.focus();
   });
 }
