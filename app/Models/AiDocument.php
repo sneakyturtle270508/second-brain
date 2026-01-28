@@ -14,12 +14,16 @@ class AiDocument extends Model
         'collection',
         'slug',
         'title',
+        'tags',
         'content',
         'content_hash',
         'embedding',
+        'url',
+        'permalink',
     ];
 
     protected $casts = [
         'embedding' => 'array',
+        'tags' => 'array',
     ];
 }

@@ -7,6 +7,7 @@ function initAiChat(root) {
   const messages = root.querySelector("[data-ai-messages]");
   const input = form?.querySelector('input[name="message"]');
   const tagInput = form?.querySelector('input[name="tag"]');
+  const collectionInput = form?.querySelector('input[name="collection"]');
 
   if (!form || !messages || !input) return;
 
@@ -19,15 +20,42 @@ function initAiChat(root) {
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function addMessage(role, text) {
+  function addMessage(role, text, { isLoading = false } = {}) {
     const wrap = document.createElement("div");
     wrap.className = `ai-msg ai-msg--${role}`;
 
     const bubble = document.createElement("div");
-    bubble.className = "ai-bubble";
+    bubble.className = `ai-bubble${isLoading ? " ai-bubble--loading" : ""}`;
     bubble.textContent = text;
 
     wrap.appendChild(bubble);
+    messages.appendChild(wrap);
+    scrollToBottom();
+    return wrap;
+  }
+
+  function addBotAnswer(answerText, primarySource) {
+    const wrap = document.createElement("div");
+    wrap.className = "ai-msg ai-msg--bot";
+
+    const bubble = document.createElement("div");
+    bubble.className = "ai-bubble";
+    bubble.textContent = answerText;
+    wrap.appendChild(bubble);
+
+    if (primarySource) {
+      const card = document.createElement("div");
+      card.className = "ai-source-card";
+
+      const titleLink = document.createElement("a");
+      titleLink.className = "ai-source-card__title";
+      titleLink.textContent = primarySource.title || "Kilde";
+      titleLink.href = primarySource.url || "#";
+      card.appendChild(titleLink);
+
+      wrap.appendChild(card);
+    }
+
     messages.appendChild(wrap);
     scrollToBottom();
     return wrap;
@@ -47,13 +75,14 @@ function initAiChat(root) {
     isSending = true;
     input.disabled = true;
 
-    const thinkingEl = addMessage("bot", "Tenker…");
+    const thinkingEl = addMessage("bot", "Tenker…", { isLoading: true });
 
     try {
       const body = {
         q: question,          // ✅ matcher web.php (eller fallbacken din)
         k: 5,
         tag: tagInput?.value || null,
+        collection: collectionInput?.value || null,
       };
 
       const res = await fetch("/ai/ask", {
@@ -76,19 +105,7 @@ function initAiChat(root) {
 
       // Hvis du vil vise kilder pent i chatten:
       // (valgfritt – funker bare hvis backend returnerer sources med url/permalink)
-      addMessage("bot", data?.answer || "(tomt svar)");
-
-      // Valgfritt: print kilder under svaret
-      if (Array.isArray(data?.sources) && data.sources.length) {
-        const lines = data.sources
-          .map((s, i) => {
-            const title = s?.title || `Kilde ${i + 1}`;
-            const url = s?.url || s?.permalink || "";
-            return url ? `• ${title} — ${url}` : `• ${title}`;
-          })
-          .join("\n");
-        addMessage("bot", `Kilder:\n${lines}`);
-      }
+      addBotAnswer(data?.answer || "(tomt svar)", data?.primary_source || null);
     } catch (err) {
       thinkingEl.remove();
       addMessage("bot", "Noe gikk galt. Sjekk console + /ai/ask route.");

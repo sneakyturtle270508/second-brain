@@ -30,6 +30,7 @@ class AiIndexEntries extends Command
 
             $title = (string) ($entry->get('title') ?? '');
             $text = $this->extractText($entry->data()->all());
+            $tags = $this->normalizeTags($entry->get('tags'));
 
             if (trim($text) === '') {
                 $this->warn("Skipping empty entry: {$sourceId}");
@@ -53,9 +54,7 @@ class AiIndexEntries extends Command
 
             $embedding = $ai->embed($text);
             $slug = (string) $entry->slug();
-
-            // Siden du vet ruten din er /knowledge/{slug}:
-            $url = $slug ? "/knowledge/{$slug}" : null;
+            $url = $entry->url() ?: null;
             $permalink = $url ? rtrim(config('app.url'), '/').$url : null;
 
             DB::table('ai_documents')->updateOrInsert(
@@ -67,6 +66,7 @@ class AiIndexEntries extends Command
                     'collection' => $entry->collectionHandle(),
                     'slug' => $slug,
                     'title' => $title,
+                    'tags' => $tags ? json_encode($tags) : null,
                     'content' => $text,
                     'content_hash' => $hash,
                     'embedding' => json_encode($embedding),
@@ -102,5 +102,33 @@ class AiIndexEntries extends Command
         }
 
         return implode("\n", array_filter($out));
+    }
+
+    private function normalizeTags($value): array
+    {
+        if ($value instanceof Value) {
+            $value = $value->value();
+        }
+
+        if (is_string($value)) {
+            return [$value];
+        }
+
+        if (is_array($value)) {
+            $tags = [];
+            foreach ($value as $item) {
+                if ($item instanceof Value) {
+                    $item = $item->value();
+                }
+
+                if (is_string($item)) {
+                    $tags[] = $item;
+                }
+            }
+
+            return array_values(array_unique(array_filter($tags)));
+        }
+
+        return [];
     }
 }
