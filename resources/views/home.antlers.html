@@ -8,12 +8,30 @@
       </div>
       <button class="app-sidebar__new-chat" type="button">Ny chat</button>
       <div class="app-sidebar__search">
+    </div>
+
+    <form class="ai-chat__form ai-chat__form--chatgpt" data-ai-form>
+      <input type="hidden" name="tag" value="{{ $active_tag }}">
+      <input type="hidden" name="collection" value="articles">
+      <input type="hidden" name="include_recent" value="0" data-include-recent-input>
+      <div class="ai-chat__input-wrapper ai-chat__input-wrapper--chatgpt">
+        <button class="ai-chat__icon ai-chat__icon--add" type="button" aria-label="Legg til">
+          +
+        </button>
         <input
           class="app-sidebar__search-input"
           type="search"
           placeholder="Søk i notater"
           aria-label="Søk i notater"
         >
+        <div class="ai-chat__actions">
+          <button class="ai-chat__icon ai-chat__icon--mic" type="button" aria-label="Bruk stemme">
+            🎙️
+          </button>
+          <button class="ai-chat__icon ai-chat__icon--send" type="submit" aria-label="Send">
+            ➜
+          </button>
+        </div>
       </div>
       <nav class="app-sidebar__nav">
         <div class="app-sidebar__section">
@@ -64,57 +82,27 @@
           </div>
         </header>
 
-        <section class="ai-chat ai-chat--chatgpt" data-ai-chat>
-          <div class="ai-chat__quick-actions" data-ai-suggestions>
-            <button
-              class="ai-card"
-              type="button"
-              data-suggestion="Oppsummer notatene mine fra denne uken, og list opp hvilke notater som ble brukt."
-              data-include-recent="1"
-            >
-              <span class="ai-card__title">Oppsummer uken</span>
-              <span class="ai-card__text">Lag en kort oppsummering av notater oppdatert denne uken.</span>
-            </button>
-            <button
-              class="ai-card"
-              type="button"
-              data-suggestion="Foreslå 3 konkrete neste steg basert på alle notatene mine."
-            >
-              <span class="ai-card__title">Neste steg</span>
-              <span class="ai-card__text">Foreslå 3 konkrete neste steg basert på alle notater.</span>
-            </button>
-            <button
-              class="ai-card"
-              type="button"
-              data-suggestion="Hva går igjen i notatene mine akkurat nå?"
-            >
-              <span class="ai-card__title">Temaer og trender</span>
-              <span class="ai-card__text">Hva går igjen i notatene mine akkurat nå?</span>
-            </button>
-          </div>
-
-          <div class="ai-chat__messages" data-ai-messages>
-            <div class="ai-msg ai-msg--bot">
-              <div class="ai-bubble">
-                Jeg kan bruke flere notater samtidig. Spør meg om uken din, be om oppsummering, eller
-                be om en handlingsplan.
-              </div>
-            </div>
-          </div>
-
-          <form class="ai-chat__form ai-chat__form--chatgpt" data-ai-form>
-            <input type="hidden" name="tag" value="{{ $active_tag }}">
-            <input type="hidden" name="collection" value="articles">
-            <input type="hidden" name="include_recent" value="0" data-include-recent-input>
-            <div class="ai-chat__input-wrapper ai-chat__input-wrapper--chatgpt">
-              <input
-                class="ai-chat__input"
-                name="message"
-                placeholder="Spør om notatene dine…"
-                autocomplete="off"
-                required
-              >
-              <button class="ai-chat__send" type="submit">Send</button>
+    <div class="notes-panel__header notes-panel__header--compact">
+      <h3>Alle notater</h3>
+      <p>Hold oversikt og åpne direkte for mer detaljer.</p>
+    </div>
+    <div class="notes-panel__list">
+      {{ collection:articles sort="updated_at:desc" taxonomy:tags="{get:tag}" }}
+        <a
+          class="note-card"
+          href="{{ url }}"
+          data-note-item
+          data-updated-at="{{ updated_at }}"
+        >
+          <div class="note-card__title">{{ title }}</div>
+          <time class="note-card__meta" datetime="{{ updated_at format='Y-m-d' }}">
+            Oppdatert {{ updated_at format="d.m.Y" }}
+          </time>
+          {{ if tags }}
+            <div class="note-card__tags">
+              {{ tags }}
+                <span class="tag">{{ title }}</span>
+              {{ /tags }}
             </div>
             <p class="ai-chat__footnote">Enter for å sende · Shift + Enter for ny linje</p>
           </form>
