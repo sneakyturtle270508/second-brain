@@ -8,6 +8,7 @@ function initAiChat(root) {
   const input = form?.querySelector('input[name="message"]');
   const tagInput = form?.querySelector('input[name="tag"]');
   const collectionInput = form?.querySelector('input[name="collection"]');
+  const suggestions = root.querySelector("[data-ai-suggestions]");
 
   if (!form || !messages || !input) return;
 
@@ -128,6 +129,18 @@ function initAiChat(root) {
     input.value = "";
 
     await sendQuestion(question);
+  });
+
+  suggestions?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains("ai-suggestion")) return;
+
+    const suggestionText = target.textContent?.trim();
+    if (!suggestionText) return;
+
+    input.value = suggestionText;
+    input.focus();
   });
 }
 
