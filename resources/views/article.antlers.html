@@ -1,0 +1,324 @@
+<!-- 
+  @Author: William Berge Groensberg
+  @Date:   2025-05-29 19:31:18
+  @Last Modified by:   William Berge Groensberg
+  @Last Modified time: 2025-05-30 10:32:16
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI - bærekraftig?</title>
+    <link rel="stylesheet" href="../../../../css/projects/forskning-opg/style.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+
+        @font-face {
+            font-family: 'OpenDyslexic-Bold';
+            src: url('fonts/OpenDyslexic-Bold.otf') format('opentype');
+        }
+
+
+        /* Body Styling */
+        body {
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: transparent;
+            /* Invisible background */
+        }
+
+        /* Minimal Back Button */
+        .back-button {
+            font-size: 1rem;
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #555;
+            text-decoration: underline;
+            text-decoration-thickness: 4px;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 50px auto 0;
+        }
+
+        .content {
+            margin-bottom: 40px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-justify {
+            text-align: justify;
+        }
+
+        .margin-bottom {
+            margin-bottom: 20px;
+        }
+
+        .large-text {
+            font-size: 2.5rem;
+            font-weight: 400;
+        }
+
+        .small-text {
+            font-size: 1.1rem;
+            font-weight: 100;
+        }
+
+        /* Image Styling */
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+
+
+
+        .font-toggle {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .font-toggle:hover {
+            background-color: #0056b3;
+        }
+
+        .open-dyslexic {
+            font-family: 'OpenDyslexic-Bold', serif;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .centre {
+            margin-top: 10px;
+            text-align: center;
+
+
+        }
+
+        figure {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* =========================
+   Bard content styling
+   ========================= */
+
+.bard-content {
+    font-family: 'Georgia', serif;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.4rem;
+    font-weight: 500;
+    margin: 3rem 0 1.5rem;
+}
+
+.bard-content h2 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 2.5rem 0 1.2rem;
+}
+
+.bard-content h3 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 2rem 0 1rem;
+}
+
+.bard-content h4 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 1.8rem 0 0.8rem;
+}
+
+.bard-content h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.6rem;
+}
+
+.bard-content h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.2rem 0 0.5rem;
+}
+
+/* Paragraphs */
+.bard-content p {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Links */
+.bard-content a {
+    color: #000;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+.bard-content a:hover {
+    opacity: 0.7;
+}
+
+/* Lists */
+.bard-content ul,
+.bard-content ol {
+    margin: 1.2rem 0 1.2rem 1.5rem;
+}
+
+.bard-content li {
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+}
+
+/* Blockquotes */
+.bard-content blockquote {
+    border-left: 4px solid #000;
+    padding-left: 1rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: #555;
+}
+
+/* Images & figures (Bard uses figure) */
+.bard-content figure {
+    margin: 2rem 0;
+}
+
+.bard-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.bard-content figcaption {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+/* Code */
+.bard-content code {
+    background: #f4f4f4;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.95rem;
+}
+
+.bard-content pre {
+    background: #f4f4f4;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: .8rem;
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="javascript:history.back()" class="back-button">Tilbake</a>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="container">
+        <!-- Article Section -->
+        <!-- overskrift -->
+        <section class="content text-center">
+           <h1>
+               {{ title }}
+           </h1>
+        </section>
+
+    
+            <!-- all the text goes here -->
+            <section class="margin-bottom bard-content">
+              {{ content }}
+            
+            </section>
+
+
+        </article>
+    </main>
+
+
+    <footer>
+        <p>&copy; Second brain 2026</p>
+    </footer>
+
+</body>
+
+</html>

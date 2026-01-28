@@ -1,5 +1,5 @@
 title: Articles
-template: default
+template: article
 layout: layout
 revisions: false
 route: '/knowledge/{slug}'

@@ -25,7 +25,6 @@ tabs:
             handle: topics
             field:
               max_items: 3
-              mode: select
               taxonomies:
                 - topics
               type: terms

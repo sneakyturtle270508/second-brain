@@ -1,8 +1,33 @@
-
-
 {{ $active_tag = get:tag }}
 
+<section class="ai-chat" data-ai-chat>
+  <div class="ai-chat__header">
+    <h2>Chat med notatene mine</h2>
+    {{ if $active_tag }}
+      <p class="ai-chat__hint">Kontekst: tag <strong>{{ $active_tag }}</strong></p>
+    {{ /if }}
+  </div>
 
+  <div class="ai-chat__messages" data-ai-messages>
+    <div class="ai-msg ai-msg--bot">
+      <div class="ai-bubble">
+        Spør meg om notatene dine. Jeg bruker dem som kontekst.
+      </div>
+    </div>
+  </div>
+
+  <form class="ai-chat__form" data-ai-form>
+    <input type="hidden" name="tag" value="{{ $active_tag }}">
+    <input
+      class="ai-chat__input"
+      name="message"
+      placeholder="Skriv et spørsmål…"
+      autocomplete="off"
+      required
+    >
+    <button class="ai-chat__send" type="submit">Send</button>
+  </form>
+</section>
 
 {{ collection:articles sort="updated_at:desc" taxonomy:tags="{get:tag}" }}
   <a class="selected" href="{{ url }}">
