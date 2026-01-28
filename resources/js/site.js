@@ -1,6 +1,5 @@
 // resources/js/site.js
-
-// Hvis du har andre imports fra før (AOS, Alpine, osv), behold dem over/under her.
+// (Behold evt. andre imports du har fra før over her.)
 // import "./bootstrap";
 
 function initAiChat(root) {
@@ -14,9 +13,7 @@ function initAiChat(root) {
   const csrf =
     document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
 
-  const state = {
-    isSending: false,
-  };
+  let isSending = false;
 
   function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
@@ -36,29 +33,27 @@ function initAiChat(root) {
     return wrap;
   }
 
-  async function safeReadJsonResponse(res) {
-    // Hvis backend sender HTML/redirect/404, json() knekker -> vi leser text først.
+  // Leser JSON trygt, selv om backend returnerer HTML/redirect/404
+  async function readJsonSafe(res) {
     const raw = await res.text();
-
     try {
-      return { ok: true, data: JSON.parse(raw) };
+      return { data: JSON.parse(raw), raw };
     } catch {
-      // Fallback: vis litt av raw for debugging i UI
-      return { ok: false, data: { error: raw?.slice?.(0, 300) || "Ukjent respons" } };
+      return { data: { error: raw?.slice?.(0, 500) || "Ukjent respons" }, raw };
     }
   }
 
   async function sendQuestion(question) {
-    state.isSending = true;
+    isSending = true;
     input.disabled = true;
 
     const thinkingEl = addMessage("bot", "Tenker…");
 
     try {
-      const payload = {
-        q: question, // ✅ matcher web.php
+      const body = {
+        q: question,          // ✅ matcher web.php (eller fallbacken din)
         k: 5,
-        tag: tagInput?.value || "",
+        tag: tagInput?.value || null,
       };
 
       const res = await fetch("/ai/ask", {
@@ -66,19 +61,12 @@ function initAiChat(root) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          // Du har disabled CSRF på routen, men dette skader ikke om meta finnes.
-          "X-CSRF-TOKEN": csrf,
+          ...(csrf ? { "X-CSRF-TOKEN": csrf } : {}),
         },
-        body: JSON.stringify({
-  q: question,
-  k: 5,
-  tag: tagInput?.value || null,
-}),
-
+        body: JSON.stringify(body),
       });
 
-      const { data } = await safeReadJsonResponse(res);
-
+      const { data } = await readJsonSafe(res);
       thinkingEl.remove();
 
       if (!res.ok) {
@@ -86,13 +74,27 @@ function initAiChat(root) {
         return;
       }
 
+      // Hvis du vil vise kilder pent i chatten:
+      // (valgfritt – funker bare hvis backend returnerer sources med url/permalink)
       addMessage("bot", data?.answer || "(tomt svar)");
+
+      // Valgfritt: print kilder under svaret
+      if (Array.isArray(data?.sources) && data.sources.length) {
+        const lines = data.sources
+          .map((s, i) => {
+            const title = s?.title || `Kilde ${i + 1}`;
+            const url = s?.url || s?.permalink || "";
+            return url ? `• ${title} — ${url}` : `• ${title}`;
+          })
+          .join("\n");
+        addMessage("bot", `Kilder:\n${lines}`);
+      }
     } catch (err) {
       thinkingEl.remove();
-      addMessage("bot", "Noe gikk galt. Sjekk console og route.");
+      addMessage("bot", "Noe gikk galt. Sjekk console + /ai/ask route.");
       console.error(err);
     } finally {
-      state.isSending = false;
+      isSending = false;
       input.disabled = false;
       input.focus();
     }
@@ -100,7 +102,7 @@ function initAiChat(root) {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (state.isSending) return;
+    if (isSending) return;
 
     const question = input.value.trim();
     if (!question) return;
@@ -110,17 +112,8 @@ function initAiChat(root) {
 
     await sendQuestion(question);
   });
-
-  // Optional: Enter = send, Shift+Enter = ikke relevant for input (kun textarea),
-  // men lar stå om du bytter til textarea senere.
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      // input trigges allerede av form submit, så dette er bare “safety”.
-    }
-  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Init alle chat-komponenter på siden
   document.querySelectorAll("[data-ai-chat]").forEach(initAiChat);
 });
