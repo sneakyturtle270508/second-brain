@@ -27,6 +27,16 @@
       overflow-y: auto;
     }
 
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 20;
+    }
+
     .sidebar-header {
       padding: 20px 16px;
       border-bottom: 1px solid #2a2a2a;
@@ -129,6 +139,48 @@
       height: 100vh;
     }
 
+    .main-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px 0;
+    }
+
+    .main-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #6f6f6f;
+    }
+
+    .hamburger-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid #2a2a2a;
+      background: #1f1f1f;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hamburger-btn span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #e8e8e8;
+      border-radius: 2px;
+    }
+
+    .hamburger-btn:hover {
+      background: #2a2a2a;
+      border-color: #3a3a3a;
+    }
+
     .chat-container {
       flex: 1;
       display: flex;
@@ -148,35 +200,52 @@
       margin-bottom: 32px;
     }
 
-    .message {
+    .ai-msg {
       display: flex;
       gap: 12px;
     }
 
-    .message-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #2a2a2a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 14px;
+    .ai-msg--user {
+      justify-content: flex-end;
     }
 
-    .message-content {
-      flex: 1;
+    .ai-bubble {
+      max-width: 80%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #242424;
+      color: #e8e8e8;
       line-height: 1.6;
       font-size: 15px;
     }
 
-    .message.user .message-content {
-      color: #e8e8e8;
+    .ai-msg--user .ai-bubble {
+      background: #3a3a3a;
+      color: #ffffff;
     }
 
-    .message.assistant .message-content {
-      color: #d0d0d0;
+    .ai-bubble--loading::after {
+      content: "…";
+      margin-left: 6px;
+      animation: blink 1s steps(1) infinite;
+    }
+
+    .ai-source-card {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #2f2f2f;
+      background: #1d1d1d;
+    }
+
+    .ai-source-card__title {
+      color: #e8e8e8;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .ai-source-card__title:hover {
+      text-decoration: underline;
     }
 
     /* Input Area */
@@ -287,13 +356,43 @@
       color: #e8e8e8;
     }
 
+    @keyframes blink {
+      0%,
+      100% {
+        opacity: 0.2;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
     @media (max-width: 768px) {
       .app {
         grid-template-columns: 1fr;
       }
 
       .sidebar {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+        z-index: 30;
+      }
+
+      .app.sidebar-open .sidebar {
+        transform: translateX(0);
+      }
+
+      .app.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .hamburger-btn {
+        display: flex;
       }
 
       .suggestions {

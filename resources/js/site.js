@@ -5,7 +5,7 @@
 function initAiChat(root) {
   const form = root.querySelector("[data-ai-form]");
   const messages = root.querySelector("[data-ai-messages]");
-  const input = form?.querySelector('input[name="message"]');
+  const input = form?.querySelector('[name="message"]');
   const tagInput = form?.querySelector('input[name="tag"]');
   const collectionInput = form?.querySelector('input[name="collection"]');
   const includeRecentInput = form?.querySelector("[data-include-recent-input]");
@@ -17,6 +17,15 @@ function initAiChat(root) {
     document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
 
   let isSending = false;
+
+  if (input instanceof HTMLTextAreaElement) {
+    const resize = () => {
+      input.style.height = "auto";
+      input.style.height = `${input.scrollHeight}px`;
+    };
+    input.addEventListener("input", resize);
+    resize();
+  }
 
   function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
@@ -130,8 +139,12 @@ function initAiChat(root) {
     const question = input.value.trim();
     if (!question) return;
 
+    messages.querySelector(".empty-state")?.remove();
     addMessage("user", question);
     input.value = "";
+    if (input instanceof HTMLTextAreaElement) {
+      input.style.height = "auto";
+    }
 
     await sendQuestion(question);
   });
@@ -162,6 +175,41 @@ function initAiChat(root) {
   });
 }
 
+function initSidebar(root) {
+  root.querySelectorAll("[data-section-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const section = button.closest(".section");
+      section?.classList.toggle("open");
+    });
+  });
+
+  const toggle = root.querySelector("[data-sidebar-toggle]");
+  const backdrop = root.querySelector("[data-sidebar-backdrop]");
+
+  const closeSidebar = () => {
+    root.classList.remove("sidebar-open");
+  };
+
+  toggle?.addEventListener("click", () => {
+    root.classList.toggle("sidebar-open");
+  });
+
+  backdrop?.addEventListener("click", closeSidebar);
+
+  root.querySelectorAll(".note-item").forEach((link) => {
+    link.addEventListener("click", closeSidebar);
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeSidebar();
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("[data-ai-chat]").forEach(initAiChat);
+  document.querySelectorAll("[data-ai-chat]").forEach((root) => {
+    initAiChat(root);
+    initSidebar(root);
+  });
 });
