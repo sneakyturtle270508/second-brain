@@ -77,7 +77,7 @@ function initAiChat(root) {
     isSending = true;
     input.disabled = true;
 
-    const thinkingEl = addMessage("bot", "Tenker…", { isLoading: true });
+    const thinkingEl = addMessage("bot", "Tenker", { isLoading: true });
 
     try {
       const body = {
