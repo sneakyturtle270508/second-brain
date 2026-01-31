@@ -1,57 +1,609 @@
 {{ $active_tag = get:tag }}
-<main class="page page--chatgpt">
+{{# home.antlers.html #}}
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="new-chat-btn" onclick="window.location.href='http://second-brain.test/cp/collections/articles'">
+        <span>+</span>
+        <span>Nytt notat</span>
+      </button>
+    </div>
 
+    <div class="sections">
+      <!-- Projects Section -->
+      <div class="section open">
+        <button class="section-toggle" onclick="toggleSection(this)">
+          <span>Prosjekter</span>
+          <span class="section-toggle-icon">▶</span>
+        </button>
+        <div class="section-content">
+          {{ collection:articles taxonomy:tags="project" sort="updated_at:desc" }}
+            <a href="{{ url }}" class="note-item">{{ title }}</a>
+          {{ /collection:articles }}
+        </div>
+      </div>
 
-  <section class="ai-chat ai-chat--chatgpt" data-ai-chat>
+      <!-- Areas Section -->
+      <div class="section open">
+        <button class="section-toggle" onclick="toggleSection(this)">
+          <span>Områder</span>
+          <span class="section-toggle-icon">▶</span>
+        </button>
+        <div class="section-content">
+          {{ collection:articles taxonomy:topics="areas" sort="updated_at:desc" }}
+            <a href="{{ url }}" class="note-item">{{ title }}</a>
+          {{ /collection:articles }}
+        </div>
+      </div>
 
-    <div class="ai-chat__messages" data-ai-messages>
-      <div class="ai-msg ai-msg--bot">
-        
+      <!-- Resources Section -->
+      <div class="section open">
+        <button class="section-toggle" onclick="toggleSection(this)">
+          <span>Ressurser</span>
+          <span class="section-toggle-icon">▶</span>
+        </button>
+        <div class="section-content">
+          {{ collection:articles taxonomy:topics="resources" sort="updated_at:desc" }}
+            <a href="{{ url }}" class="note-item">{{ title }}</a>
+          {{ /collection:articles }}
+        </div>
+      </div>
+
+      <!-- Archive Section -->
+      <div class="section">
+        <button class="section-toggle" onclick="toggleSection(this)">
+          <span>Arkiv</span>
+          <span class="section-toggle-icon">▶</span>
+        </button>
+        <div class="section-content">
+          {{ collection:articles taxonomy:topics="archive" sort="updated_at:desc" }}
+            <a href="{{ url }}" class="note-item">{{ title }}</a>
+          {{ /collection:articles }}
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="chat-container">
+      <div class="messages" id="messages" data-ai-messages>
+        <div class="empty-state">
+          <h1 class="empty-state-title">Hva kan jeg hjelpe deg med?</h1>
+          <div class="suggestions" data-ai-suggestions>
+            <button class="suggestion-btn" data-suggestion="Oppsummer mine prosjektnotater" data-include-recent="0">
+              Oppsummer mine prosjektnotater
+            </button>
+            <button class="suggestion-btn" data-suggestion="Finn alle notater om design" data-include-recent="0">
+              Finn alle notater om design
+            </button>
+            <button class="suggestion-btn" data-suggestion="Hvilke oppgaver mangler jeg?" data-include-recent="0">
+              Hvilke oppgaver mangler jeg?
+            </button>
+            <button class="suggestion-btn" data-suggestion="Lag en ukentlig oppsummering" data-include-recent="1">
+              Lag en ukentlig oppsummering
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <form class="ai-chat__form ai-chat__form--chatgpt" data-ai-form>
-      <input type="hidden" name="tag" value="{{ $active_tag }}">
-      <input type="hidden" name="collection" value="articles">
-      <input type="hidden" name="include_recent" value="0" data-include-recent-input>
-      <div class="ai-chat__input-wrapper ai-chat__input-wrapper--chatgpt">
-        <button class="ai-chat__icon ai-chat__icon--add" type="button" aria-label="Legg til">
-          +
-        </button>
-        <input class="ai-chat__input" name="message" placeholder="Spør om notatene dine…" autocomplete="off" required>
-        <div class="ai-chat__actions">
-
-          <button class="ai-chat__icon ai-chat__icon--send" type="submit" aria-label="Send">
-            ➜
+    <div class="input-container">
+      <div class="input-wrapper">
+        <form class="input-form" data-ai-form>
+          <input type="hidden" name="collection" value="articles">
+          <input type="hidden" name="include_recent" value="0" data-include-recent-input>
+          <textarea 
+            class="input-field" 
+            name="message"
+            placeholder="Spør om notatene dine..."
+            rows="1"
+          ></textarea>
+          <button type="submit" class="send-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 8L14 2L8 14L6.5 9.5L2 8Z" fill="currentColor"/>
+            </svg>
           </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: #e8e8e8;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #151515;
+      border-right: 1px solid #2a2a2a;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      padding: 12px 16px;
+      background: transparent;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      color: #e8e8e8;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .new-chat-btn:hover {
+      background: #2a2a2a;
+    }
+
+    .sections {
+      flex: 1;
+      padding: 8px 0;
+    }
+
+    .section {
+      margin-bottom: 4px;
+    }
+
+    .section-toggle {
+      width: 100%;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      color: #a8a8a8;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .section-toggle:hover {
+      background: #1f1f1f;
+      color: #e8e8e8;
+    }
+
+    .section-toggle-icon {
+      transition: transform 0.2s;
+      font-size: 10px;
+    }
+
+    .section.open .section-toggle-icon {
+      transform: rotate(90deg);
+    }
+
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .section.open .section-content {
+      max-height: 1000px;
+    }
+
+    .note-item {
+      padding: 10px 16px 10px 32px;
+      color: #a8a8a8;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .note-item:hover {
+      background: #1f1f1f;
+      color: #e8e8e8;
+    }
+
+    .note-item.active {
+      background: #2a2a2a;
+      color: #e8e8e8;
+    }
+
+    /* Main Area */
+    .main {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px 20px;
+      overflow-y: auto;
+    }
+
+    .messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .message-content {
+      flex: 1;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .message.user .message-content {
+      color: #e8e8e8;
+    }
+
+    .message.assistant .message-content {
+      color: #d0d0d0;
+    }
+
+    /* Input Area */
+    .input-container {
+      padding: 20px;
+      border-top: 1px solid #2a2a2a;
+      background: #1a1a1a;
+    }
+
+    .input-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .input-form {
+      background: #2a2a2a;
+      border-radius: 12px;
+      border: 1px solid #3a3a3a;
+      padding: 12px 52px 12px 16px;
+      transition: all 0.2s;
+    }
+
+    .input-form:focus-within {
+      border-color: #4a4a4a;
+      background: #2f2f2f;
+    }
+
+    .input-field {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #e8e8e8;
+      font-size: 15px;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+    }
+
+    .input-field::placeholder {
+      color: #6a6a6a;
+    }
+
+    .send-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 32px;
+      height: 32px;
+      background: #e8e8e8;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+      background: #ffffff;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: #6a6a6a;
+    }
+
+    .empty-state-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #a8a8a8;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      max-width: 600px;
+    }
+
+    .suggestion-btn {
+      padding: 16px;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      color: #a8a8a8;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .suggestion-btn:hover {
+      background: #2f2f2f;
+      border-color: #4a4a4a;
+      color: #e8e8e8;
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <button class="new-chat-btn" onclick="newChat()">
+          <span>+</span>
+          <span>Nytt notat</span>
+        </button>
+      </div>
+
+      <div class="sections">
+        <div class="section open">
+          <button class="section-toggle" onclick="toggleSection(this)">
+            <span>Prosjekter</span>
+            <span class="section-toggle-icon">▶</span>
+          </button>
+          <div class="section-content">
+            <a href="#" class="note-item" data-tags="project">AI Chatbot Redesign</a>
+            <a href="#" class="note-item" data-tags="project">Nettside Oppgradering</a>
+            <a href="#" class="note-item" data-tags="project">Kundeportal v2</a>
+          </div>
+        </div>
+
+        <div class="section open">
+          <button class="section-toggle" onclick="toggleSection(this)">
+            <span>Områder</span>
+            <span class="section-toggle-icon">▶</span>
+          </button>
+          <div class="section-content">
+            <a href="#" class="note-item" data-tags="areas">Design Retningslinjer</a>
+            <a href="#" class="note-item" data-tags="areas">Kodestandarder</a>
+            <a href="#" class="note-item" data-tags="areas">Team Møter</a>
+          </div>
+        </div>
+
+        <div class="section open">
+          <button class="section-toggle" onclick="toggleSection(this)">
+            <span>Ressurser</span>
+            <span class="section-toggle-icon">▶</span>
+          </button>
+          <div class="section-content">
+            <a href="#" class="note-item" data-tags="resources">CSS Tips & Tricks</a>
+            <a href="#" class="note-item" data-tags="resources">JavaScript Snippets</a>
+            <a href="#" class="note-item" data-tags="resources">Design Inspirasjon</a>
+          </div>
+        </div>
+
+        <div class="section">
+          <button class="section-toggle" onclick="toggleSection(this)">
+            <span>Arkiv</span>
+            <span class="section-toggle-icon">▶</span>
+          </button>
+          <div class="section-content">
+            <a href="#" class="note-item" data-tags="archive">Gamle Prosjekter</a>
+            <a href="#" class="note-item" data-tags="archive">2023 Notater</a>
+          </div>
         </div>
       </div>
-      <p class="ai-chat__footnote">Enter for å sende · Shift + Enter for ny linje</p>
-    </form>
-  </section>
+    </aside>
 
-
-
-  <div class="notes-panel__header notes-panel__header--compact">
-    <h3>Alle notater</h3>
-
-  </div>
-  <div class="notes-side-pannel__list">
-    {{ collection:articles sort="updated_at:desc" taxonomy:tags="{get:tag}" }}
-      <a class="note-card" href="{{ url }}" data-note-item data-updated-at="{{ updated_at }}">
-        <div class="note-card__title">{{ title }}</div>
-        <time class="note-card__meta" datetime="{{ updated_at format='Y-m-d' }}">
-          Oppdatert {{ updated_at format="d.m.Y" }}
-        </time>
-        {{ if tags }}
-          <div class="note-card__tags">
-            {{ tags }}
-              <span class="tag">{{ title }}</span>
-            {{ /tags }}
+    <!-- Main Content -->
+    <main class="main">
+      <div class="chat-container">
+        <div class="messages" id="messages">
+          <div class="empty-state">
+            <h1 class="empty-state-title">Hva kan jeg hjelpe deg med?</h1>
+            <div class="suggestions">
+              <button class="suggestion-btn" onclick="askQuestion(this)">
+                Oppsummer mine prosjektnotater
+              </button>
+              <button class="suggestion-btn" onclick="askQuestion(this)">
+                Finn alle notater om design
+              </button>
+              <button class="suggestion-btn" onclick="askQuestion(this)">
+                Hvilke oppgaver mangler jeg?
+              </button>
+              <button class="suggestion-btn" onclick="askQuestion(this)">
+                Lag en ukentlig oppsummering
+              </button>
+            </div>
           </div>
-        {{ /if }}
-      </a>
-    {{ /collection:articles }}
+        </div>
+      </div>
+
+      <div class="input-container">
+        <div class="input-wrapper">
+          <form class="input-form" onsubmit="sendMessage(event)">
+            <textarea 
+              class="input-field" 
+              placeholder="Spør om notatene dine..."
+              rows="1"
+              onkeydown="handleKeyDown(event)"
+            ></textarea>
+            <button type="submit" class="send-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M2 8L14 2L8 14L6.5 9.5L2 8Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
   </div>
-  </section>
-</main>
+
+  <script>
+    function toggleSection(button) {
+      const section = button.closest('.section');
+      section.classList.toggle('open');
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        event.target.form.dispatchEvent(new Event('submit'));
+      }
+    }
+
+    function sendMessage(event) {
+      event.preventDefault();
+      const textarea = event.target.querySelector('.input-field');
+      const message = textarea.value.trim();
+      
+      if (!message) return;
+
+      const messagesDiv = document.getElementById('messages');
+      const emptyState = messagesDiv.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
+
+      // User message
+      messagesDiv.innerHTML += `
+        <div class="message user">
+          <div class="message-avatar">👤</div>
+          <div class="message-content">${message}</div>
+        </div>
+      `;
+
+      // Assistant response (simulated)
+      setTimeout(() => {
+        messagesDiv.innerHTML += `
+          <div class="message assistant">
+            <div class="message-avatar">🤖</div>
+            <div class="message-content">Jeg søker gjennom notatene dine for å finne relevant informasjon...</div>
+          </div>
+        `;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }, 500);
+
+      textarea.value = '';
+      textarea.style.height = 'auto';
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function askQuestion(button) {
+      const textarea = document.querySelector('.input-field');
+      textarea.value = button.textContent.trim();
+      textarea.focus();
+    }
+
+    function newChat() {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.innerHTML = `
+        <div class="empty-state">
+          <h1 class="empty-state-title">Hva kan jeg hjelpe deg med?</h1>
+          <div class="suggestions">
+            <button class="suggestion-btn" onclick="askQuestion(this)">
+              Oppsummer mine prosjektnotater
+            </button>
+            <button class="suggestion-btn" onclick="askQuestion(this)">
+              Finn alle notater om design
+            </button>
+            <button class="suggestion-btn" onclick="askQuestion(this)">
+              Hvilke oppgaver mangler jeg?
+            </button>
+            <button class="suggestion-btn" onclick="askQuestion(this)">
+              Lag en ukentlig oppsummering
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Auto-resize textarea
+    document.addEventListener('input', function(e) {
+      if (e.target.classList.contains('input-field')) {
+        e.target.style.height = 'auto';
+        e.target.style.height = (e.target.scrollHeight) + 'px';
+      }
+    });
+  </script>
+</body>
+</html>

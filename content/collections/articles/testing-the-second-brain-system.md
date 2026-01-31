@@ -4,11 +4,11 @@ blueprint: article
 title: 'Testing the second brain system'
 summary: 'this is just for testing the second brain system'
 topics:
-  - testing
+  - project
 tags:
-  - test
+  - project
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1769607578
+updated_at: 1769890017
 content:
   -
     type: paragraph
