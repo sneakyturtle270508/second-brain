@@ -55,9 +55,16 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles sort="updated_at:desc" limit="8" }}
-            <a href="{{ url }}" class="note-item">{{ title }}</a>
-          {{ /collection:articles }}
+<div class="section-content">
+  {{ collection:articles taxonomy:topics="project" sort="updated_at:desc" }}
+    <a href="{{ url }}" class="note-item">{{ title }}</a>
+  {{ /collection:articles }}
+
+  {{ if total_results == 0 }}
+    <div class="note-item" style="opacity:.6;">Ingen notater med topics:project</div>
+  {{ /if }}
+</div>
+
         </div>
       </div>
     </div>

@@ -27,7 +27,6 @@ tabs:
               max_items: 3
               taxonomies:
                 - topics
-                - project
               type: terms
               display: Topics
               validate:
@@ -64,11 +63,6 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: Content
-          -
-            handle: taxonomy_terms_field
-            field:
-              type: terms
-              display: 'Taxonomy Terms Field'
           -
             handle: taxonomies_field
             field:
