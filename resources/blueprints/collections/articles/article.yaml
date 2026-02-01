@@ -22,15 +22,16 @@ tabs:
               validate:
                 - required
           -
-            handle: topics
+            handle: para
             field:
-              max_items: 3
+              max_items: 1
               taxonomies:
                 - topics
               type: terms
-              display: Topics
+              display: Para
               validate:
                 - required
+              mode: select
           -
             handle: tags
             field:
@@ -63,11 +64,6 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: Content
-          -
-            handle: taxonomies_field
-            field:
-              type: taxonomies
-              display: 'Taxonomies Field'
   sidebar:
     display: Sidebar
     sections:
