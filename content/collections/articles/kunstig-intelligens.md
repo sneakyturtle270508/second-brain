@@ -4,12 +4,14 @@ blueprint: article
 title: 'Kunstig intelligens'
 summary: 'er artikkle om hvordan ki kan være bærekraftig'
 topics:
-  - ai
+  - 'project::project'
 tags:
   - ai
   - baerekraft
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1769604361
+updated_at: 1769899146
+taxonomies_field:
+  - project
 content:
   -
     type: heading

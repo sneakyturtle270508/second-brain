@@ -28,11 +28,11 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ taxonomy:topics sort="title" }}
+          {{ taxonomy:project sort="title" }}
             {{ if slug != "project" }}
               <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ /if }}
-          {{ /taxonomy:topics }}
+          {{ /taxonomy:project }}
         </div>
       </div>
 
@@ -42,9 +42,10 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ taxonomy:tags collection="articles"  sort="title" }}
-            <a href="{{ url }}" class="note-item">{{ title }}</a>
-          {{ /taxonomy:tags }}
+          {{ collection:articles taxonomy:project="*" }}
+  <h2>{{ title }}</h2>
+{{ /collection:articles }}
+
         </div>
       </div>
 

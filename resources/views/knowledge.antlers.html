@@ -6,9 +6,15 @@
     <title></title>
 </head>
 <body>
-  {{ collection:articles}}
-  {{ taxonomy:filter="tags:" }}
+  {{ collection:articles taxonomies:taxonomies_field="tagg"}}
+taxonomies_field="project"
     <h1>{{ title }}</h1>
-  {{ /collection:articles }}
+{{taxonomies:taxonomies_field="tagg"}}
+
+    {{ /collection:articles }}
+
+
+
 </body>
 </html>
+
