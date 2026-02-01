@@ -16,9 +16,9 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-         {{ collection:articles taxonomy:topics="test" }}
-  <h2>{{ title }}</h2>
-{{ /collection:articles }}
+          {{ collection:articles taxonomy:topics="project" sort="title" }}
+            <a href="{{ url }}" class="note-item">{{ title }}</a>
+          {{ /collection:articles }}
         </div>
       </div>
 
@@ -28,8 +28,8 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ taxonomy:topics filter="project" sort="title" }}
-            {{ if slug == "project" }}
+          {{ taxonomy:topics sort="title" }}
+            {{ if slug != "project" }}
               <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ /if }}
           {{ /taxonomy:topics }}
