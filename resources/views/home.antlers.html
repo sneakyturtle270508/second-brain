@@ -16,8 +16,11 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles para:contains="project" sort="title" }}
+         {{ collection:articles para:contains="project" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
+            {{ no_results }}
+              <div class="note-item" style="opacity:.6;">Ingen notater i project</div>
+            {{ /no_results }}
           {{ /collection:articles }}
         </div>
       </div>
@@ -28,10 +31,10 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="areas" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ no_results }}
-              <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
+              <div class="note-item" style="opacity:.6;">Ingen notater i project</div>
             {{ /no_results }}
           {{ /collection:articles }}
         </div>
@@ -44,7 +47,7 @@
         </button>
         <div class="section-content">
        
-          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="resources" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ no_results }}
               <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
@@ -60,11 +63,9 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="archive" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
-            {{ no_results }}
-              <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
-            {{ /no_results }}
+            
           {{ /collection:articles }}
 
         </div>
