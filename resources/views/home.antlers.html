@@ -16,7 +16,7 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles taxonomy:topics="project" sort="title" }}
+          {{ collection:articles para:contains="project" sort="title" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
           {{ /collection:articles }}
         </div>
@@ -28,10 +28,10 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles Para:contains="projects" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ no_results }}
-              <div class="note-item" style="opacity:.6;">Ingen notater med topics:project</div>
+              <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
             {{ /no_results }}
           {{ /collection:articles }}
         </div>
@@ -44,10 +44,10 @@
         </button>
         <div class="section-content">
        
-          {{ collection:articles topics:contains="project" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ no_results }}
-              <div class="note-item" style="opacity:.6;">Ingen notater med topics:project</div>
+              <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
             {{ /no_results }}
           {{ /collection:articles }}
 
@@ -60,10 +60,10 @@
           <span class="section-toggle-icon">▶</span>
         </button>
         <div class="section-content">
-          {{ collection:articles topics:contains="project" sort="updated_at:desc" }}
+          {{ collection:articles para:contains="project" sort="updated_at:desc" }}
             <a href="{{ url }}" class="note-item">{{ title }}</a>
             {{ no_results }}
-              <div class="note-item" style="opacity:.6;">Ingen notater med topics:project</div>
+              <div class="note-item" style="opacity:.6;">Ingen notater med para:project</div>
             {{ /no_results }}
           {{ /collection:articles }}
 
