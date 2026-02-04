@@ -57,8 +57,15 @@ return [
       'type' => 'collection',
       'collection' => 'articles',
       'limit' => 10,
+      'width' => 50,
   ], 
   
+  [ 
+      'type' => 'collection',
+      'collection' => 'pages',
+      'limit' => 10,
+      'width' => 50,
+  ], 
   [ 
       'type' => 'updater',
   
