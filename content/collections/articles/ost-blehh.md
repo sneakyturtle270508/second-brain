@@ -8,8 +8,8 @@ topics:
 tags:
   - nice
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1769955525
-para: archive
+updated_at: 1770185624
+para: resources
 content:
   -
     type: paragraph

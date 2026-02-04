@@ -1,15 +1,15 @@
 ---
 id: 651d32f7-4936-4fa7-884e-81e492c090f9
-published: false
 blueprint: article
 title: OnePlus
 summary: 'En artikkel om OnePlus, innovasjon og bærekraft i mobilteknologi'
 topics:
   - oneplus
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1769898593
+updated_at: 1770185595
 taxonomies_field:
   - project
+para: project
 content:
   -
     type: heading
