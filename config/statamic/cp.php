@@ -53,8 +53,27 @@ return [
     */
 
     'widgets' => [
-        'getting_started',
-    ],
+  [ 
+      'type' => 'collection',
+      'collection' => 'articles',
+      'limit' => 10,
+  ], 
+  
+  [ 
+      'type' => 'updater',
+  
+      'width' => 100,
+  
+      'sites' => ['default'],
+  
+  ], 
+], 
+
+
+// config/statamic/cp.php
+
+
+
 
     /*
     |--------------------------------------------------------------------------

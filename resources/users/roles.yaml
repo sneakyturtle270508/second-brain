@@ -1,4 +1,13 @@
-# admin:
-#   title: Administrator
-#   permissions:
-#     - super
+ansatte_regler:
+  title: 'ansatte regler'
+  permissions:
+    - 'access cp'
+    - 'view articles entries'
+    - 'edit articles entries'
+    - 'create articles entries'
+    - 'delete articles entries'
+    - 'publish articles entries'
+    - 'edit other authors articles entries'
+    - 'publish other authors articles entries'
+    - 'delete other authors articles entries'
+    - 'impersonate users'

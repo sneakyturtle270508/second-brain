@@ -1,4 +1,4 @@
-# admin:
-#   title: Administrators
-#   roles:
-#     - admin
+ansatte:
+  title: ansatte
+  roles:
+    - ansatte_regler
