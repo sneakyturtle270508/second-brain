@@ -9,7 +9,7 @@
       background: #1a1a1a;
       color: #e8e8e8;
       height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .app {
@@ -24,7 +24,7 @@
       border-right: 1px solid #2a2a2a;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow-x: auto;
     }
 
     .sidebar-backdrop {
@@ -101,7 +101,7 @@
 
     .section-content {
       max-height: 0;
-      overflow: hidden;
+      overflow-y: hidden;
       transition: max-height 0.3s ease;
     }
 
@@ -118,7 +118,7 @@
       display: block;
       transition: all 0.2s;
       white-space: nowrap;
-      overflow: hidden;
+      overflow-x: hidden;
       text-overflow: ellipsis;
     }
 
@@ -189,7 +189,7 @@
       width: 100%;
       margin: 0 auto;
       padding: 40px 20px 20px;
-      overflow-y: auto;
+      overflow-x: auto;
     }
 
     .messages {

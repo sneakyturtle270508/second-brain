@@ -7,9 +7,9 @@ para: project
 tags:
   - test
 updated_by: f724dde5-bb71-4ecd-9c41-2e5ce00b9881
-updated_at: 1770196559
+updated_at: 1770197301
 bilde:
-  - screenshot-2026-01-22-at-16.52.49.png
+  - projects/screenshot-2026-01-22-at-16.52.49.png
 content:
   -
     type: paragraph
