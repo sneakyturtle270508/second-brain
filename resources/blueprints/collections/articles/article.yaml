@@ -64,6 +64,12 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: Content
+          -
+            handle: bilde
+            field:
+              container: assets
+              type: assets
+              display: bilde
   sidebar:
     display: Sidebar
     sections:

@@ -16,4 +16,9 @@ preferences:
         - slug
         - status
         - para
+        - summary
+        - tags
+      view: list
+    pages:
+      view: tree
   color_mode: dark
