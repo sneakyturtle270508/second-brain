@@ -16,3 +16,4 @@ preferences:
         - slug
         - status
         - para
+  color_mode: dark
