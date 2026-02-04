@@ -70,16 +70,6 @@ tabs:
               container: assets
               type: assets
               display: bilde
-      -
-        display: 'New Section'
-        fields:
-          -
-            handle: dictionary_field00l
-            field:
-              dictionary: languages
-              placeholder: uiku
-              type: dictionary
-              display: 'Dictionary Field00l'
   sidebar:
     display: Sidebar
     sections:

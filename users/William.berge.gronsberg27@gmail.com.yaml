@@ -2,6 +2,9 @@ name: 'William Berge grønsberg'
 groups:
   - ansatte
 super: false
+two_factor_secret: eyJpdiI6Ik1XMmlMMXp1N0NpSUFFUlNTSEpxdUE9PSIsInZhbHVlIjoiQXFPdjNUOXh3ZG83eG92SDFrek1iaHFCZTJTU2YrQWpGWmxXeUhYTHNyND0iLCJtYWMiOiI1N2Y1M2E5YmJiNzRlOGY0NzE0OWIxOTE5YjYyZWI3NTk2MDc3N2UzMzkyODRhMzUwMjg5Zjg4OGY3ZTMyMDZhIiwidGFnIjoiIn0=
+two_factor_recovery_codes: eyJpdiI6Ilp5YnlEeUNOWlJEbjl2VlNZaWFrYUE9PSIsInZhbHVlIjoiRGZJd0NlQ2NidC9vc0dFL0ZnTFdDcTF2SzFtVUplOGROeWNvakdNVXJOOW9PSk1KSmlsLzZCaUJoenJSeXpIUkRTZFlCOUU2RjBDOXNaOW12dVNvZVVpTW1QQUlkM2VWcDVCYUsvN0Y4NytYRnZ5algzblRtN0g2cjVyNE94L0FKNmdDejFDTk5PRjhzYlRCbW1yeHlyeGpuR3JDdVVmelBjVXJBWXRVNWFLMFlWZ0VaN0hQUjZaVkVqTHQydndEcXo2MGtxSlQ3c3p1eElaYnJNaTJ0bW4wQ0N0Rjk4azU1OFViSFBJbWdlVFp2VG9obFYwUFZvU2lCWmY4N3ZCTmZNeW94SnQ5bW43aFMxTjFueTR0clE9PSIsIm1hYyI6IjFmZTQ5ZDJlNGMyMTQxYTg4MzY4ODA3MTM0NDVhMmNiN2QxYzBhOTk1MDAzNjhmYjJkM2YyNmQ4NGI4MWMzNGIiLCJ0YWciOiIifQ==
+two_factor_confirmed_at: 1770203979
 id: f10ac7cf-7877-47fc-b0be-2aec8e18ebd9
 password_hash: $2y$12$N/mrh39L/VMK5hwIurYTUuXpfn5kWvPkMLtbE0eOEu8HLiQjYAJyi
 preferences:
@@ -10,3 +13,23 @@ preferences:
       id: ml7qauik
       name: 'next break'
       url: 'https://im24wil27051.imporsgrunn.no/pages/projects/pauser/'
+  theme:
+    id: 14
+    name: Appart
+    colors:
+      danger: '#a90a23'
+      body-bg: '#eedeca'
+      primary: '#314a4e'
+      success: '#00a969'
+      switch-bg: '#00a969'
+      content-bg: '#fffdf5'
+      progress-bar: '#a90a23'
+      ui-accent-bg: '#005398'
+      focus-outline: '#005398'
+      ui-accent-text: '#005398'
+      global-header-bg: '#1b1c1f'
+      dark-body-bg: '#1b1c1f'
+      dark-content-bg: '#141414'
+  collections:
+    articles:
+      view: list

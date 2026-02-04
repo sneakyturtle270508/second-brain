@@ -119,7 +119,7 @@
       transition: all 0.2s;
       white-space: nowrap;
       overflow-x: hidden;
-      text-overflow: ellipsis;
+    
     }
 
     .note-item:hover {

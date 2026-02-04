@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Route;
 
+// ✅ Google login imports
+use Laravel\Socialite\Facades\Socialite;
+use Statamic\Facades\User;
+use Illuminate\Support\Facades\Auth;
+
 Route::post('/ai/ask', function (Request $request, AiService $ai) {
 
     // Frontend sender "message", curl kan sende "q". Støtt begge.
@@ -166,3 +171,59 @@ SYS
     ]);
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+/*
+|--------------------------------------------------------------------------
+| ✅ Google OAuth login (Statamic CP)
+|--------------------------------------------------------------------------
+| Start:  /auth/google
+| Callback: /auth/google/callback
+|
+| This logs in an EXISTING Statamic user by email, then sends them to /cp.
+*/
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
+});
+
+Route::get('/auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->stateless()->user();
+
+    $email = (string) $googleUser->getEmail();
+
+    // Default: only allow existing Statamic users
+    $user = User::findByEmail($email);
+
+    if (! $user) {
+        abort(403, 'Not allowed');
+    }
+
+    Auth::login($user);
+
+    return redirect('/cp');
+});
+
+Route::get('/auth/github', function () {
+    return Socialite::driver('github')->redirect();
+});
+
+Route::get('/auth/github/callback', function () {
+    $ghUser = Socialite::driver('github')->stateless()->user();
+
+    // GitHub kan returnere null email hvis den er privat.
+    // Da prøver vi å hente den fra user-objektet, ellers stopper vi.
+    $email = (string) ($ghUser->getEmail() ?? '');
+
+    if ($email === '') {
+        abort(403, 'GitHub account has no public email. Make it public or use Google login.');
+    }
+
+    $user = \Statamic\Facades\User::findByEmail($email);
+
+    if (! $user) {
+        abort(403, 'Not allowed');
+    }
+
+    \Illuminate\Support\Facades\Auth::login($user);
+
+    return redirect('/cp');
+});
