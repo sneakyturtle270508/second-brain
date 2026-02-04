@@ -5,11 +5,15 @@ use App\Services\AiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 // ✅ Google login imports
 use Laravel\Socialite\Facades\Socialite;
 use Statamic\Facades\User;
 use Illuminate\Support\Facades\Auth;
+
+// ✅ Statamic Entry
+use Statamic\Facades\Entry;
 
 Route::post('/ai/ask', function (Request $request, AiService $ai) {
 
@@ -179,7 +183,7 @@ SYS
 | Start:  /auth/google
 | Callback: /auth/google/callback
 |
-| This logs in an EXISTING Statamic user by email, then sends them to /cp.
+| This logs in an EXISTING Statamic user by email, then sends dem til /cp.
 */
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -210,7 +214,6 @@ Route::get('/auth/github/callback', function () {
     $ghUser = Socialite::driver('github')->stateless()->user();
 
     // GitHub kan returnere null email hvis den er privat.
-    // Da prøver vi å hente den fra user-objektet, ellers stopper vi.
     $email = (string) ($ghUser->getEmail() ?? '');
 
     if ($email === '') {
@@ -227,3 +230,133 @@ Route::get('/auth/github/callback', function () {
 
     return redirect('/cp');
 });
+
+Route::get('/clipper', function (Request $request, AiService $ai) {
+
+    $text    = trim((string) $request->query('text', ''));
+    $url     = trim((string) $request->query('url', ''));
+    $title   = trim((string) $request->query('title', ''));
+    $tagsRaw = trim((string) $request->query('tags', ''));     // valgfritt: "ai,php"
+    $summary = trim((string) $request->query('summary', ''));  // valgfritt
+
+    if (mb_strlen($text) < 5) {
+        return response("Select litt mer tekst (minst ~5 tegn).", 422);
+    }
+
+    if ($title === '') {
+        $title = Str::limit($text, 60, '…');
+    }
+
+    if ($summary === '') {
+        $summary = Str::limit(preg_replace('/\s+/', ' ', $text), 160, '…');
+    }
+
+    // Tags: "ai, php, statamic" -> ["ai","php","statamic"]
+    $tags = collect(preg_split('/[,;]+/', $tagsRaw))
+        ->map(fn ($t) => Str::slug(trim($t)))
+        ->filter()
+        ->values()
+        ->all();
+
+    // Content (Bard/ProseMirror blocks) – hvis "Content" er Bard
+    $paragraphs = preg_split("/\R{2,}/", $text);
+    $contentBlocks = collect($paragraphs)
+        ->map(fn ($p) => trim($p))
+        ->filter()
+        ->map(fn ($p) => [
+            'type' => 'paragraph',
+            'content' => [
+                ['type' => 'text', 'text' => $p],
+            ],
+        ])
+        ->values()
+        ->all();
+
+    // Stabil "dedupe"-key (samme tekst+url = samme entry)
+    $contentHash = hash('sha256', trim($text).'|'.trim($url));
+
+    // 1) Embedding
+    try {
+        $embedding = $ai->embed($text);
+    } catch (\Throwable $e) {
+        return response("Kunne ikke lage embedding: ".$e->getMessage(), 500);
+    }
+
+    // 2) Lagre/oppdater AiDocument (for søk/rag)
+    $doc = AiDocument::updateOrCreate(
+        ['content_hash' => $contentHash],
+        [
+            'title'      => $title,
+            'content'    => $text,
+            'url'        => $url,
+            'collection' => 'clips',
+            'source'     => 'browser_clip',
+            'embedding'  => is_array($embedding) ? json_encode($embedding) : $embedding,
+        ]
+    );
+
+    // 3) Lag/oppdater Statamic entry i collection "articles"
+    $slug = Str::slug(Str::limit($title, 60, '')) . '-' . substr($contentHash, 0, 8);
+
+    $entry = Entry::query()
+        ->where('collection', 'articles')
+        ->where('slug', $slug)
+        ->first();
+
+    if (! $entry) {
+        $entry = Entry::make()
+            ->collection('articles')
+            ->slug($slug);
+    }
+
+    $entry->data(array_merge($entry->data()->all(), [
+        'title'   => $title,
+        'summary' => $summary,
+
+        // ✅ HER: felt-handle "para" -> term slug "resources"
+        'para'    => ['resources'],
+
+        // tags taxonomy
+        'tags'    => $tags,
+
+        // Bard content
+        'content' => $contentBlocks,
+
+        // Bonus: lagre original url hvis du har et felt for det
+        'source_url' => $url, // fjern hvis du ikke har dette feltet
+    ]));
+
+    $entry->save();
+
+    // Feedback
+    $safeTitle = e($title);
+    $safeUrl   = e($url);
+
+    return response(<<<HTML
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saved</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; padding:18px;}
+    .card{max-width:680px;margin:0 auto;padding:16px;border:1px solid #eee;border-radius:12px;}
+    .ok{font-size:18px;margin:0 0 8px;}
+    .meta{color:#555;font-size:14px;word-break:break-all;}
+    .small{color:#777;font-size:13px;margin-top:8px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="ok">Saved ✅</p>
+    <div><strong>{$safeTitle}</strong></div>
+    <div class="meta">{$safeUrl}</div>
+    <div class="small">Statamic entry: articles/{$slug}</div>
+  </div>
+  <script>setTimeout(()=>window.close(), 700)</script>
+</body>
+</html>
+HTML)->header('Content-Type', 'text/html; charset=utf-8');
+
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
