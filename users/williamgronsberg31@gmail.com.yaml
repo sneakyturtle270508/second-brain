@@ -21,4 +21,33 @@ preferences:
       view: list
     pages:
       view: tree
-  color_mode: dark
+  theme:
+    id: 17
+    name: 'Black widow'
+    colors:
+      danger: 'oklch(0.3724 0.1326 25.778)'
+      body-bg: 'oklch(0.268 0.007 34.298)'
+      gray-50: 'oklch(0.985 0.001 106.423)'
+      primary: 'oklch(0.187 0.004 49.25)'
+      success: 'oklch(0.393 0.095 152.535)'
+      gray-100: 'oklch(0.97 0.001 106.424)'
+      gray-150: 'oklch(0.9465 0.002 77.571)'
+      gray-200: 'oklch(0.923 0.003 48.717)'
+      gray-300: 'oklch(0.869 0.005 56.366)'
+      gray-400: 'oklch(0.709 0.01 56.259)'
+      gray-500: 'oklch(0.553 0.013 58.071)'
+      gray-600: 'oklch(0.444 0.011 73.639)'
+      gray-700: 'oklch(0.374 0.01 67.558)'
+      gray-800: 'oklch(0.268 0.007 34.298)'
+      gray-850: 'oklch(0.236 0.006 48.043)'
+      gray-900: 'oklch(0.216 0.006 56.043)'
+      gray-925: 'oklch(0.2042 0.0057 55.203)'
+      gray-950: 'oklch(0.187 0.004 49.25)'
+      content-bg: 'oklch(0.1947 0 0)'
+      body-border: 'oklch(0.236 0 0)'
+      progress-bar: 'oklch(0.3582 0.0726 169.341)'
+      ui-accent-bg: 'oklch(0.297 0.09 281.288)'
+      focus-outline: 'oklch(0.322 0.091 267.935)'
+      content-border: 'oklch(0.216 0.006 56.043)'
+      global-header-bg: 'oklch(0.269 0 0)'
+  color_mode: light
