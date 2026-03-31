@@ -26,7 +26,7 @@ return [
     */
 
     'auth' => [
-        'enabled' => true,
+        'enabled' => false,
         'redirect_to' => null,
     ],
 
