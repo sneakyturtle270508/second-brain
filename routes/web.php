@@ -3,17 +3,15 @@
 use App\Models\AiDocument;
 use App\Services\AiService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-
-// ✅ Google login imports
-use Laravel\Socialite\Facades\Socialite;
-use Statamic\Facades\User;
 use Illuminate\Support\Facades\Auth;
-
-// ✅ Statamic Entry
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
+// ✅ Google login imports
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use Statamic\Facades\Entry;
+// ✅ Statamic Entry
+use Statamic\Facades\User;
 
 Route::post('/ai/ask', function (Request $request, AiService $ai) {
 
@@ -32,7 +30,7 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
         $queryEmbedding = $ai->embed($q);
     } catch (\Throwable $e) {
         return response()->json([
-            'error' => 'Kunne ikke lage embedding: ' . $e->getMessage(),
+            'error' => 'Kunne ikke lage embedding: '.$e->getMessage(),
         ], 500);
     }
 
@@ -46,6 +44,7 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
     if ($tag !== '' && Schema::hasColumn('ai_documents', 'tags')) {
         $docs = $docs->filter(function ($doc) use ($tag) {
             $tags = is_array($doc->tags) ? $doc->tags : [];
+
             return in_array($tag, $tags, true);
         })->values();
     }
@@ -69,7 +68,7 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
             $docEmbedding = json_decode($docEmbedding, true) ?: [];
         }
 
-        if (!is_array($docEmbedding) || count($docEmbedding) === 0) {
+        if (! is_array($docEmbedding) || count($docEmbedding) === 0) {
             continue;
         }
 
@@ -89,7 +88,7 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
     $top = array_slice($scored, 0, max(1, $k));
     $primary = $top[0]['doc'] ?? null;
 
-    if (!$primary) {
+    if (! $primary) {
         return response()->json([
             'answer' => 'Jeg finner ikke dette i notatene dine.',
             'sources' => [],
@@ -121,8 +120,8 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
         if ($n === 1) {
             $context .= "SOURCE {$n}\n";
             $context .= "TITLE: {$title}\n";
-            $context .= "URL: " . ($url ?: '') . "\n";
-            $context .= "CONTENT:\n" . mb_substr((string) $doc->content, 0, 1500) . "\n\n";
+            $context .= 'URL: '.($url ?: '')."\n";
+            $context .= "CONTENT:\n".mb_substr((string) $doc->content, 0, 1500)."\n\n";
         }
     }
 
@@ -130,7 +129,7 @@ Route::post('/ai/ask', function (Request $request, AiService $ai) {
     $messages = [
         [
             'role' => 'system',
-            'content' => <<<SYS
+            'content' => <<<'SYS'
 Du er en second-brain-assistent. Du får SOURCES med TITLE, URL og CONTENT.
 
 REGLER:
@@ -159,7 +158,7 @@ SYS
         ]);
     } catch (\Throwable $e) {
         return response()->json([
-            'error' => 'Kunne ikke hente svar fra modellen: ' . $e->getMessage(),
+            'error' => 'Kunne ikke hente svar fra modellen: '.$e->getMessage(),
         ], 500);
     }
 
@@ -175,6 +174,9 @@ SYS
     ]);
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+// Load additional test UI routes
+require __DIR__.'/test_ui.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -233,14 +235,14 @@ Route::get('/auth/github/callback', function () {
 
 Route::get('/clipper', function (Request $request, AiService $ai) {
 
-    $text    = trim((string) $request->query('text', ''));
-    $url     = trim((string) $request->query('url', ''));
-    $title   = trim((string) $request->query('title', ''));
+    $text = trim((string) $request->query('text', ''));
+    $url = trim((string) $request->query('url', ''));
+    $title = trim((string) $request->query('title', ''));
     $tagsRaw = trim((string) $request->query('tags', ''));     // valgfritt: "ai,php"
     $summary = trim((string) $request->query('summary', ''));  // valgfritt
 
     if (mb_strlen($text) < 5) {
-        return response("Select litt mer tekst (minst ~5 tegn).", 422);
+        return response('Select litt mer tekst (minst ~5 tegn).', 422);
     }
 
     if ($title === '') {
@@ -279,24 +281,24 @@ Route::get('/clipper', function (Request $request, AiService $ai) {
     try {
         $embedding = $ai->embed($text);
     } catch (\Throwable $e) {
-        return response("Kunne ikke lage embedding: ".$e->getMessage(), 500);
+        return response('Kunne ikke lage embedding: '.$e->getMessage(), 500);
     }
 
     // 2) Lagre/oppdater AiDocument (for søk/rag)
     $doc = AiDocument::updateOrCreate(
         ['content_hash' => $contentHash],
         [
-            'title'      => $title,
-            'content'    => $text,
-            'url'        => $url,
+            'title' => $title,
+            'content' => $text,
+            'url' => $url,
             'collection' => 'clips',
-            'source'     => 'browser_clip',
-            'embedding'  => is_array($embedding) ? json_encode($embedding) : $embedding,
+            'source' => 'browser_clip',
+            'embedding' => is_array($embedding) ? json_encode($embedding) : $embedding,
         ]
     );
 
     // 3) Lag/oppdater Statamic entry i collection "articles"
-    $slug = Str::slug(Str::limit($title, 60, '')) . '-' . substr($contentHash, 0, 8);
+    $slug = Str::slug(Str::limit($title, 60, '')).'-'.substr($contentHash, 0, 8);
 
     $entry = Entry::query()
         ->where('collection', 'articles')
@@ -310,14 +312,14 @@ Route::get('/clipper', function (Request $request, AiService $ai) {
     }
 
     $entry->data(array_merge($entry->data()->all(), [
-        'title'   => $title,
+        'title' => $title,
         'summary' => $summary,
 
         // ✅ HER: felt-handle "para" -> term slug "resources"
-        'para'    => ['resources'],
+        'para' => ['resources'],
 
         // tags taxonomy
-        'tags'    => $tags,
+        'tags' => $tags,
 
         // Bard content
         'content' => $contentBlocks,
@@ -330,7 +332,7 @@ Route::get('/clipper', function (Request $request, AiService $ai) {
 
     // Feedback
     $safeTitle = e($title);
-    $safeUrl   = e($url);
+    $safeUrl = e($url);
 
     return response(<<<HTML
 <!doctype html>
