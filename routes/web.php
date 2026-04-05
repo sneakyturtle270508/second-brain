@@ -175,6 +175,11 @@ SYS
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
+// Index route for test UI (replaces default welcome for quick verification)
+Route::get('/', function () {
+    return view('test-ui');
+});
+
 // Load additional test UI routes
 require __DIR__.'/test_ui.php';
 
