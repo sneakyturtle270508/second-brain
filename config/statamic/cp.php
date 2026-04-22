@@ -27,7 +27,7 @@ return [
 
     'auth' => [
         'enabled' => true,
-        'redirect_to' => null,
+        'redirect_to' => '/cp',
     ],
 
     /*

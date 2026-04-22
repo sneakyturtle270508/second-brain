@@ -175,10 +175,10 @@ SYS
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-// Index route for test UI (Antlers integration) - renders by Antlers template
+// Index route for test UI (pixel-closer Antlers integration) - renders new Antlers template
 Route::get('/', function () {
     // Use Antlers blade wrapper to render the Antlers content
-    return view('test-ui-antlers');
+    return view('test-ui-closer');
 });
 
 // Load additional test UI routes

@@ -19,35 +19,36 @@ preferences:
         - summary
         - tags
       view: list
+      after_save: continue_editing
     pages:
       view: tree
   theme:
-    id: 17
-    name: 'Black widow'
+    id: 15
+    name: 'purple dream'
     colors:
-      danger: 'oklch(0.3724 0.1326 25.778)'
-      body-bg: 'oklch(0.268 0.007 34.298)'
-      gray-50: 'oklch(0.985 0.001 106.423)'
-      primary: 'oklch(0.187 0.004 49.25)'
-      success: 'oklch(0.393 0.095 152.535)'
-      gray-100: 'oklch(0.97 0.001 106.424)'
-      gray-150: 'oklch(0.9465 0.002 77.571)'
-      gray-200: 'oklch(0.923 0.003 48.717)'
-      gray-300: 'oklch(0.869 0.005 56.366)'
-      gray-400: 'oklch(0.709 0.01 56.259)'
-      gray-500: 'oklch(0.553 0.013 58.071)'
-      gray-600: 'oklch(0.444 0.011 73.639)'
-      gray-700: 'oklch(0.374 0.01 67.558)'
-      gray-800: 'oklch(0.268 0.007 34.298)'
-      gray-850: 'oklch(0.236 0.006 48.043)'
-      gray-900: 'oklch(0.216 0.006 56.043)'
-      gray-925: 'oklch(0.2042 0.0057 55.203)'
-      gray-950: 'oklch(0.187 0.004 49.25)'
-      content-bg: 'oklch(0.1947 0 0)'
-      body-border: 'oklch(0.236 0 0)'
-      progress-bar: 'oklch(0.3582 0.0726 169.341)'
-      ui-accent-bg: 'oklch(0.297 0.09 281.288)'
-      focus-outline: 'oklch(0.322 0.091 267.935)'
-      content-border: 'oklch(0.216 0.006 56.043)'
-      global-header-bg: 'oklch(0.269 0 0)'
+      gray-50: 'oklch(0.984 0.003 247.858)'
+      primary: 'oklch(0.591 0.293 322.896)'
+      gray-100: 'oklch(0.968 0.007 247.896)'
+      gray-150: 'oklch(0.9485 0.01 251.702)'
+      gray-200: 'oklch(0.929 0.013 255.508)'
+      gray-300: 'oklch(0.869 0.022 252.894)'
+      gray-400: 'oklch(0.704 0.04 256.788)'
+      gray-500: 'oklch(0.554 0.046 257.417)'
+      gray-600: 'oklch(0.446 0.043 257.281)'
+      gray-700: 'oklch(0.372 0.044 257.287)'
+      gray-800: 'oklch(0.279 0.041 260.031)'
+      gray-850: 'oklch(0.236 0.041 263.801)'
+      gray-900: 'oklch(0.208 0.042 265.755)'
+      gray-925: 'oklch(0.1945 0.042 265.573)'
+      gray-950: 'oklch(0.169 0.042 264.695)'
+      switch-bg: 'oklch(0.627 0.194 149.214)'
+      content-bg: 'oklch(0.833 0.145 321.434)'
+      body-border: 'oklch(0.427 0.191 325.102)'
+      ui-accent-bg: 'oklch(0.546 0.245 262.881)'
+      global-header-bg: 'oklch(0.558 0.288 302.321)'
+      dark-body-bg: 'oklch(0.1947 0 0)'
+      dark-primary: 'oklch(0.718 0.202 349.761)'
+      dark-content-bg: 'oklch(0.702 0.183 293.541)'
+      dark-body-border: 'oklch(0.427 0.191 325.102)'
+      dark-content-border: 'oklch(0.1947 0 0)'
   color_mode: light

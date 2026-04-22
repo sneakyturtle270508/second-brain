@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ title ?? 'General Knowledge' }}</title>
+  <title>General Knowledge</title>
   <style>
     :root{--bg:#f6f0e5;--card:#fff;--muted:#6b6b6b;--border:#e6e2d9;--chip:#e8eefc}
     *{box-sizing:border-box}
@@ -85,6 +85,7 @@
         General Knowledge
         <span class="dropdown">▾</span>
       </div>
+      <h3 style="font-weight:600;margin:8px 0 6px">Folders</h3>
       <div class="cards-grid" aria-label="Folders">
         <div class="card" title="Onboarding">
           <div class="card-icon">N</div>
@@ -124,4 +125,4 @@
   </div>
 </body>
 </html>
-@endphp
+@endants
